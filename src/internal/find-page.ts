@@ -1,5 +1,8 @@
 import type { EleventyContent, GlobalData } from './eleventy-types.js';
+import type { WikilinkMeta } from './types.js';
 
+
+export type PageDirectoryService = ReturnType<typeof pageLookup>;
 /**
  * Page Lookup Service:
  * This wraps the 11ty all pages collection providing two methods for finding pages.
@@ -9,7 +12,8 @@ import type { EleventyContent, GlobalData } from './eleventy-types.js';
  */
 export const pageLookup = (allPages: EleventyContent[] = []) => {
   return {
-    findByLink: (link: any) => {
+    // Find a page by its link meta data. Type: WikilinkMeta | LinkMeta (subset of WikilinkMeta) Add later
+    findByLink: (link: WikilinkMeta) => {
       let foundByAlias = false;
       const page = allPages.find(page => {
         // Order of lookup:
