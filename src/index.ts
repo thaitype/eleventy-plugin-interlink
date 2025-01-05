@@ -5,7 +5,7 @@ import { Interlinker } from './internal/Interlinker.js';
  * @param eleventyConfig
  * @param options
  */
-export default function registerInterlinkPlugin(eleventyConfig: any, options: any) {
+export default function pluginObsidianLink(eleventyConfig: any, options: any) {
   const { permalinkBase = '/', extension = '.html' } = options;
 
   const interlinker = new Interlinker();

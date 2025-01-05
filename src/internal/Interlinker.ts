@@ -27,7 +27,6 @@ const wikilinkReplacer = (
 };
 
 export class Interlinker {
-  isComputed: boolean = false;
 
   async compute(data: GlobalData) {
     // 11ty will invoke this several times during its build cycle, accessing the values we
@@ -35,11 +34,15 @@ export class Interlinker {
     // once they are met.
     // @see https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies
     if (!data.page.inputPath || data.collections.all.length === 0) return [];
+    // Only process markdown files
+    if(!data.page.inputPath.endsWith('.md')) return [];
 
     const pageDirectory = pageLookup(data.collections.all);
     const currentPage = pageDirectory.findByFile(data);
     // console.log(`Current page:`, currentPage);
     if (!currentPage) return [];
+
+    console.log(`------------------------`);
 
     console.log(`Current page rawInput:`, currentPage.page.filePathStem);
 

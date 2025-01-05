@@ -195,7 +195,7 @@ interface EleventyConfig {
 }
 
 export interface GlobalData {
-  title: string;
+  title: string | undefined;
   page: EleventyPage;
   eleventy: EleventyConfig;
   collections: {
