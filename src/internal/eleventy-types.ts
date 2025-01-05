@@ -61,6 +61,11 @@ interface EleventyPage {
  * From   //src/Template.js Line 770  (https://github.dev/11ty/eleventy)
  */
 export interface EleventyContent {
+  template: {
+    read: () => Promise<{
+      content: string;
+    } | undefined>;
+  }
   /**
    * The base file path without extension, used for URLs and organization.
    * @example "/index"
