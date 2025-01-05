@@ -1,3 +1,3 @@
-# typescript-npm-boilerplate-esm-cjs
+# eleventy-plugin-obsidian-link
 
 Build process come from Effect.ts
