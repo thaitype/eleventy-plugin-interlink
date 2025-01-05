@@ -1,6 +1,5 @@
-
-import type { EleventyContent, GlobalData } from './eleventy-types';
-import { pageLookup } from './find-page';
+import type { EleventyContent, GlobalData } from './eleventy-types.ts';
+import { pageLookup } from './find-page.js';
 
 /**
  * Replacer function for processing wikilinks into Markdown links.
@@ -28,7 +27,6 @@ const wikilinkReplacer = (
 };
 
 export class Interlinker {
-
   isComputed: boolean = false;
 
   async compute(data: GlobalData) {
@@ -46,16 +44,15 @@ export class Interlinker {
     console.log(`Current page rawInput:`, currentPage.page.filePathStem);
 
     const wikiLinkRegex = /\[\[([\w\s/.'-]+)(\|([\w\s/.'-]+))?\]\]/g;
-    const pasredWikiLinks = currentPage.rawInput.replace(
-      wikiLinkRegex,
-      (match, link, pipe, displayText) => wikilinkReplacer(match, link, pipe, displayText, {
+    const pasredWikiLinks = currentPage.rawInput.replace(wikiLinkRegex, (match, link, pipe, displayText) =>
+      wikilinkReplacer(match, link, pipe, displayText, {
         contentData: currentPage,
       })
     );
 
     // Set the new rawInput
     currentPage.rawInput = pasredWikiLinks;
-    
+
     return [];
   }
 }

@@ -1,4 +1,4 @@
-import type { EleventyContent, GlobalData } from "./eleventy-types";
+import type { EleventyContent, GlobalData } from './eleventy-types.js';
 
 /**
  * Page Lookup Service:
@@ -7,12 +7,11 @@ import type { EleventyContent, GlobalData } from "./eleventy-types";
  * @param {Array<any>} allPages
  * @return {import('@photogabble/eleventy-plugin-interlinker').PageDirectoryService}
  */
-export const pageLookup = (allPages : EleventyContent[] = []) => {
+export const pageLookup = (allPages: EleventyContent[] = []) => {
   return {
     findByLink: (link: any) => {
       let foundByAlias = false;
-      const page = allPages.find((page) => {
-
+      const page = allPages.find(page => {
         // Order of lookup:
         // 1. if is path link, return filePathStem match state
         // 2. match file url to link href
@@ -28,13 +27,16 @@ export const pageLookup = (allPages : EleventyContent[] = []) => {
           return true;
         }
 
-        if ((page.data.title && page.data.title === link.name) || page.fileSlug === link.name ) {
+        if ((page.data.title && page.data.title === link.name) || page.fileSlug === link.name) {
           return true;
         }
 
-        const aliases = ((page.data.aliases && Array.isArray(page.data.aliases))
+        const aliases = (
+          page.data.aliases && Array.isArray(page.data.aliases)
             ? page.data.aliases
-            : (typeof page.data.aliases === 'string' ? [page.data.aliases] : [])
+            : typeof page.data.aliases === 'string'
+              ? [page.data.aliases]
+              : []
         ).reduce(function (set, alias) {
           set.add(alias);
           return set;
@@ -48,9 +50,9 @@ export const pageLookup = (allPages : EleventyContent[] = []) => {
         found: !!page,
         page,
         foundByAlias,
-      }
+      };
     },
 
-    findByFile: (file: GlobalData) => allPages.find((page) => page.url === file.page.url),
-  }
-}
+    findByFile: (file: GlobalData) => allPages.find(page => page.url === file.page.url),
+  };
+};

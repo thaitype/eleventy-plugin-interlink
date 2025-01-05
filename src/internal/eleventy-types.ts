@@ -1,58 +1,56 @@
-import { Glob } from "bun";
-
 /**
  * Represents the detailed metadata of a page.
  */
 interface EleventyPage {
-  /** 
-   * The relative path to the input file. 
+  /**
+   * The relative path to the input file.
    * @example "./content/index.md"
    */
   inputPath: string;
-  
-  /** 
-   * The slug generated from the file name. 
+
+  /**
+   * The slug generated from the file name.
    * @example "first"
    */
   fileSlug: string;
-  
-  /** 
-   * The file path without extension, used as a base for URLs. 
+
+  /**
+   * The file path without extension, used as a base for URLs.
    * @example "/index"
    */
   filePathStem: string;
-  
-  /** 
-   * The extension of the output file. 
+
+  /**
+   * The extension of the output file.
    * @example "html"
    */
   outputFileExtension: string;
-  
-  /** 
-   * The template syntax used in the file. 
+
+  /**
+   * The template syntax used in the file.
    * @example "njk,md"
    */
   templateSyntax: string;
-  
-  /** 
-   * The timestamp when the file was last modified or generated. 
+
+  /**
+   * The timestamp when the file was last modified or generated.
    * @example "2025-01-04T14:03:56.000Z"
    */
   date: string;
-  
-  /** 
-   * The raw content of the input file as a string. 
+
+  /**
+   * The raw content of the input file as a string.
    */
   rawInput: string;
-  
-  /** 
-   * The public URL of the generated output file. 
+
+  /**
+   * The public URL of the generated output file.
    * @example "/"
    */
   url: string;
-  
-  /** 
-   * The path to the generated output file. 
+
+  /**
+   * The path to the generated output file.
    * @example "./_site/index.html"
    */
   outputPath: string;
@@ -63,54 +61,54 @@ interface EleventyPage {
  * From   //src/Template.js Line 770  (https://github.dev/11ty/eleventy)
  */
 export interface EleventyContent {
-  /** 
-   * The base file path without extension, used for URLs and organization. 
+  /**
+   * The base file path without extension, used for URLs and organization.
    * @example "/index"
    */
   filePathStem: string;
-  
-  /** 
-   * The public URL of the content. 
+
+  /**
+   * The public URL of the content.
    * @example "/posts/first/"
    */
   url: string;
-  
-  /** 
-   * The detailed metadata of the content's page. 
+
+  /**
+   * The detailed metadata of the content's page.
    */
   page: EleventyPage;
-  
-  /** 
-   * The raw content of the file as a string. 
+
+  /**
+   * The raw content of the file as a string.
    */
   rawInput: string;
-  
-  /** 
-   * The group number used for grouping related content. 
+
+  /**
+   * The group number used for grouping related content.
    * @example 0
    */
   groupNumber: number;
-  
-  /** 
-   * The relative path to the input file. 
+
+  /**
+   * The relative path to the input file.
    * @example "./content/posts/first.md"
    */
   inputPath: string;
-  
-  /** 
-   * The slug generated from the file name. 
+
+  /**
+   * The slug generated from the file name.
    * @example "first"
    */
   fileSlug: string;
-  
-  /** 
-   * The timestamp when the file was last modified or generated. 
+
+  /**
+   * The timestamp when the file was last modified or generated.
    * @example "2025-01-04T14:18:33.257Z"
    */
   date: string;
-  
-  /** 
-   * The path to the generated output file. 
+
+  /**
+   * The path to the generated output file.
    * @example "./_site/posts/first/index.html"
    */
   outputPath: string;
@@ -195,7 +193,6 @@ interface EleventyConfig {
     output: string;
   };
 }
-
 
 export interface GlobalData {
   title: string;
