@@ -1,5 +1,7 @@
 import type { EleventyContent, GlobalData } from './eleventy-types.ts';
 import { pageLookup } from './find-page.js';
+import { pathResolver } from './path-resolver.js';
+
 
 /**
  * Replacer function for processing wikilinks into Markdown links.
@@ -17,16 +19,19 @@ const wikilinkReplacer = (
   displayText: string | undefined,
   context: {
     contentData: EleventyContent;
+    targetLink: string;
   }
 ): string => {
-  const { contentData: item } = context;
+  const { contentData: item, targetLink } = context;
   console.log(`File: "${item.filePathStem}" - Found link: "${link}" (match: ${match})`);
   const text = displayText || link.trim();
 
-  return `[${text}](${link}#wiki)`;
+  return `[${text}](${targetLink})`;
 };
 
 export class Interlinker {
+
+  
 
   async compute(data: GlobalData) {
     // 11ty will invoke this several times during its build cycle, accessing the values we
@@ -35,7 +40,7 @@ export class Interlinker {
     // @see https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies
     if (!data.page.inputPath || data.collections.all.length === 0) return [];
     // Only process markdown files
-    if(!data.page.inputPath.endsWith('.md')) return [];
+    if (!data.page.inputPath.endsWith('.md')) return [];
 
     const pageDirectory = pageLookup(data.collections.all);
     const currentPage = pageDirectory.findByFile(data);
@@ -50,6 +55,7 @@ export class Interlinker {
     const pasredWikiLinks = currentPage.rawInput.replace(wikiLinkRegex, (match, link, pipe, displayText) =>
       wikilinkReplacer(match, link, pipe, displayText, {
         contentData: currentPage,
+        targetLink: pathResolver(link, data.collections.all),
       })
     );
 
