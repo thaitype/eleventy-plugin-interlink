@@ -1,7 +1,7 @@
 {
   "name": "@thaitype/eleventy-plugin-obsidian-link",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/dts/index.d.ts",
@@ -42,7 +42,7 @@
     "@babel/plugin-transform-export-namespace-from": "^7.24.1",
     "@babel/plugin-transform-modules-commonjs": "^7.24.1",
     "@type-challenges/utils": "^0.1.1",
-    "babel-plugin-annotate-pure-calls": "^0.4.0", 
+    "babel-plugin-annotate-pure-calls": "^0.4.0",
     "release-it": "^17.3.0"
   },
   "peerDependencies": {
