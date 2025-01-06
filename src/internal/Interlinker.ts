@@ -1,7 +1,8 @@
 import type { EleventyContent, GlobalData } from './eleventy-types.ts';
 import { pageLookup } from './find-page.js';
 import { pathResolver } from './path-resolver.js';
-
+import fs from 'fs';
+import { getDateTimeSlug } from './utils.js';
 
 /**
  * Replacer function for processing wikilinks into Markdown links.
@@ -20,18 +21,35 @@ const wikilinkReplacer = (
   context: {
     contentData: EleventyContent;
     targetLink: string;
+    logger: (message: string) => void;
   }
 ): string => {
-  const { contentData: item, targetLink } = context;
-  console.log(`File: "${item.filePathStem}" - Found link: "${link}" (match: ${match})`);
+  const { contentData: item, targetLink, logger } = context;
+  logger(`Found link  "${link}" in "${item.filePathStem}" will link to "${targetLink}"`);
   const text = displayText || link.trim();
 
-  return `[${text}](${targetLink})`;
+  const _link = encodeURI(targetLink);
+
+  return `[${text}](${_link})`;
 };
+
+
+function convertEleventyContentToObject(data: EleventyContent): object{
+  return {
+    filePathStem: data.filePathStem,
+    url: data.url,
+    fileSlug: data.fileSlug,
+    page: data.page,
+  } as EleventyContent;
+}
 
 export class Interlinker {
 
-  
+  logFile = `interlinker-${getDateTimeSlug()}.log`;
+
+  private logger(message: string) {
+    fs.appendFileSync(this.logFile, `${message}\n`);
+  }
 
   async compute(data: GlobalData) {
     // 11ty will invoke this several times during its build cycle, accessing the values we
@@ -50,13 +68,30 @@ export class Interlinker {
     console.log(`------------------------`);
 
     console.log(`Current page rawInput:`, currentPage.page.filePathStem);
+    this.logger(`---------------- Current page rawInput: ${currentPage.page.filePathStem} ----------------\n\n`);
 
     const wikiLinkRegex = /\[\[([\w\s/.'-]+)(\|([\w\s/.'-]+))?\]\]/g;
-    const pasredWikiLinks = currentPage.rawInput.replace(wikiLinkRegex, (match, link, pipe, displayText) =>
-      wikilinkReplacer(match, link, pipe, displayText, {
+    const pasredWikiLinks = currentPage.rawInput.replace(wikiLinkRegex, (match, foundLinkId, pipe, displayText) => {
+      const targetLink = pathResolver(foundLinkId, currentPage, data.collections.all);
+      
+      // if(foundLinkId === 'React'){
+      //   this.logger(`\n\n > current page: ${JSON.stringify(convertEleventyContentToObject(currentPage), null, 2)} ----------`);
+      //   this.logger(JSON.stringify(data.collections.all.map(data => ({
+      //     filePathStem: data.filePathStem,
+      //     url: data.url,
+      //     fileSlug: data.fileSlug,
+      //   })), null, 2));
+      // }
+      
+      // this.logger(`---------- Found Link Id "${foundLinkId}" ----------`);
+      // this.logger(`match: ${match} - foundLinkId: ${foundLinkId} - displayText: ${displayText}`);
+      const result = wikilinkReplacer(match, foundLinkId, pipe, displayText, {
         contentData: currentPage,
-        targetLink: pathResolver(link, data.collections.all),
-      })
+        targetLink,
+        logger: this.logger.bind(this),
+      });
+      return result;
+    }
     );
 
     // Set the new rawInput
