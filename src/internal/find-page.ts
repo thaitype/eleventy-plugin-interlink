@@ -1,7 +1,6 @@
 import type { EleventyContent, GlobalData } from './eleventy-types.js';
 import type { WikilinkMeta } from './types.js';
 
-
 export type PageDirectoryService = ReturnType<typeof pageLookup>;
 /**
  * Page Lookup Service:

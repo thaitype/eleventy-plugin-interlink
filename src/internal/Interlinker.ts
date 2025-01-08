@@ -37,8 +37,7 @@ const wikilinkReplacer = (
   return `${match} => [${text}](${_link})`;
 };
 
-
-function convertEleventyContentToObject(data: EleventyContent): object{
+function convertEleventyContentToObject(data: EleventyContent): object {
   return {
     filePathStem: data.filePathStem,
     url: data.url,
@@ -48,7 +47,6 @@ function convertEleventyContentToObject(data: EleventyContent): object{
 }
 
 export class Interlinker {
-
   logFile = `interlinker-${getDateTimeSlug()}.log`;
 
   private logger(message: string) {
@@ -77,7 +75,7 @@ export class Interlinker {
     const wikiLinkRegex = /\[\[([\w\s/.'-]+)(\|([\w\s/.'-]+))?\]\]/g;
     const pasredWikiLinks = currentPage.rawInput.replace(wikiLinkRegex, (match, foundLinkId, pipe, displayText) => {
       const targetLink = pathResolver(foundLinkId, currentPage, data.collections.all);
-      
+
       // if(foundLinkId === 'React'){
       //   this.logger(`\n\n > current page: ${JSON.stringify(convertEleventyContentToObject(currentPage), null, 2)} ----------`);
       //   this.logger(JSON.stringify(data.collections.all.map(data => ({
@@ -86,7 +84,7 @@ export class Interlinker {
       //     fileSlug: data.fileSlug,
       //   })), null, 2));
       // }
-      
+
       // this.logger(`---------- Found Link Id "${foundLinkId}" ----------`);
       // this.logger(`match: ${match} - foundLinkId: ${foundLinkId} - displayText: ${displayText}`);
       const result = wikilinkReplacer(match, foundLinkId, pipe, displayText, {
@@ -95,8 +93,7 @@ export class Interlinker {
         logger: this.logger.bind(this),
       });
       return result;
-    }
-    );
+    });
 
     // Set the new rawInput
     currentPage.rawInput = pasredWikiLinks;
