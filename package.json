@@ -1,5 +1,5 @@
 {
-  "name": "@thaitype/eleventy-plugin-obsidian-link",
+  "name": "@thaitype/eleventy-plugin-interlink",
   "type": "module",
   "version": "0.0.4",
   "main": "./dist/cjs/index.js",
