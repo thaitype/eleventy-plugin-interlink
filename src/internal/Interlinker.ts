@@ -1,7 +1,6 @@
 import type { EleventyContent, GlobalData } from './eleventy-types.ts';
 import { pageLookup } from './find-page.js';
 import { pathResolver } from './path-resolver.js';
-import fs from 'fs';
 import { getDateTimeSlug } from './utils.js';
 
 /**
@@ -28,13 +27,9 @@ const wikilinkReplacer = (
   logger(`Found link  "${link}" in "${item.filePathStem}" will link to "${targetLink}"`);
   const text = displayText || link.trim();
 
-  // if(!targetLink){
-  //   return match;
-  // }
-
   const _link = encodeURI(targetLink ?? '/not-found');
 
-  return `${match} => [${text}](${_link})`;
+  return `[${text}](${_link})`;
 };
 
 function convertEleventyContentToObject(data: EleventyContent): object {
