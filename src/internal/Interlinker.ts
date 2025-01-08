@@ -20,7 +20,7 @@ const wikilinkReplacer = (
   displayText: string | undefined,
   context: {
     contentData: EleventyContent;
-    targetLink: string;
+    targetLink: string | null;
     logger: (message: string) => void;
   }
 ): string => {
@@ -28,9 +28,13 @@ const wikilinkReplacer = (
   logger(`Found link  "${link}" in "${item.filePathStem}" will link to "${targetLink}"`);
   const text = displayText || link.trim();
 
-  const _link = encodeURI(targetLink);
+  // if(!targetLink){
+  //   return match;
+  // }
 
-  return `[${text}](${_link})`;
+  const _link = encodeURI(targetLink ?? '/not-found');
+
+  return `${match} => [${text}](${_link})`;
 };
 
 

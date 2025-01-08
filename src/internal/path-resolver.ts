@@ -13,46 +13,46 @@ export function pathResolver(
   linkId: string,
   linkIdPage: EleventyContent,
   allPages: EleventyContent[]
-): string {
-  const foundPage = allPages.filter(page => {
-    // Pre-process
+): string | null {
 
-    // Step 0.1: Clean up the linkId, removing any trailing slashes, Case-insensitive, it's not affecting the search
-    linkId = linkId.trim().toLowerCase().replace(/\/$/, '');
+  const normalizedLinkId = linkId.trim();
 
-    // Step 0.2: Identity if linkId is a path or id e.g. [[path/to/file]] or [[id]]
-    const isPath = linkId.includes('/');
-
-    // ----------------
-    // Search Algorithm
-
-    // Step 1: If the linkId is a path, check if the path matches the current page's `filePathStem`
-    if (isPath) {
-      console.log(`Found at Step 1: ${linkId} === ${page.filePathStem}`);
-      return page.filePathStem === linkId;
+  // Rule 1: If `linkId` is an absolute path (starts with `/`)
+  if (normalizedLinkId.startsWith("/")) {
+    const exactMatch = allPages.find((page) => page.filePathStem === normalizedLinkId);
+    if (exactMatch) {
+      return exactMatch.url;
     }
-
-    // Step 2: If the linkIdPage is in same directory with the linkId, return the linkIdPage url
-    const linkIdPageDir = path.dirname(linkIdPage.filePathStem).toLowerCase();
-    // Make current page is the same directory with the linkId page
-    if(path.dirname(page.filePathStem).toLowerCase() === linkIdPageDir){
-      // Found the page in the same directory
-      if(page.fileSlug.toLowerCase() === linkId){
-        return true;
-      }
-    }
-
-
-
-  });
-
-  for(const page of foundPage) {
-    console.log(`XXX => foundPage: ${page.filePathStem} (${page.fileSlug})`);
   }
 
-  if(foundPage.length > 0){
-    return foundPage[0].url;
+  // Rule 2: If `linkId` is a relative path (does not start with `/`)
+  if (!normalizedLinkId.startsWith("/")) {
+    const partialMatch = allPages.find((page) => page.filePathStem.endsWith(`/${normalizedLinkId}`));
+    if (partialMatch) {
+      return partialMatch.url;
+    }
   }
 
-  return '/not-found';
+  // Rule 3: Check if `linkId` is in the same directory as the current page
+  const currentDir = path.dirname(linkIdPage.filePathStem);
+  const sameDirMatch = allPages.find(
+    (page) =>
+      page.fileSlug === normalizedLinkId &&
+      page.filePathStem.startsWith(`${currentDir}/`)
+  );
+  if (sameDirMatch) {
+    return sameDirMatch.url;
+  }
+
+  // Rule 4: Find the `linkId` in the first subdirectory alphabetically
+  const matchingSubdirPages = allPages
+    .filter((page) => page.fileSlug === normalizedLinkId)
+    .sort((a, b) => a.filePathStem.localeCompare(b.filePathStem));
+
+  if (matchingSubdirPages.length > 0) {
+    return matchingSubdirPages[0].url;
+  }
+
+  // If no match is found, return null
+  return null;
 }
