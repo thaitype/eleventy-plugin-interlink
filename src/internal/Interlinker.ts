@@ -50,7 +50,8 @@ export class Interlinker {
   logFile = `interlinker-${getDateTimeSlug()}.log`;
 
   private logger(message: string) {
-    fs.appendFileSync(this.logFile, `${message}\n`);
+    // fs.appendFileSync(this.logFile, `${message}\n`);
+    console.log(message);
   }
 
   async compute(data: GlobalData) {
@@ -64,13 +65,13 @@ export class Interlinker {
 
     const pageDirectory = pageLookup(data.collections.all);
     const currentPage = pageDirectory.findByFile(data);
-    // console.log(`Current page:`, currentPage);
+
     if (!currentPage) return [];
 
-    console.log(`------------------------`);
+    // console.log(`------------------------`);
 
-    console.log(`Current page rawInput:`, currentPage.page.filePathStem);
-    this.logger(`---------------- Current page rawInput: ${currentPage.page.filePathStem} ----------------\n\n`);
+    // console.log(`Current page rawInput:`, currentPage.page.filePathStem);
+    // this.logger(`---------------- Current page rawInput: ${currentPage.page.filePathStem} ----------------\n\n`);
 
     const wikiLinkRegex = /\[\[([\w\s/.'-]+)(\|([\w\s/.'-]+))?\]\]/g;
     const pasredWikiLinks = currentPage.rawInput.replace(wikiLinkRegex, (match, foundLinkId, pipe, displayText) => {
